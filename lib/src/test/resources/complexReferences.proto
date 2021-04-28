@@ -1,0 +1,15 @@
+message Polygon {
+    repeated Points.Point points = 1;
+
+    message Points {
+        message Point {
+            required int32 x = 1;
+            required int32 y = 2;
+        }
+    }
+}
+
+message Line {
+    required Polygon.Points.Point x = 1;
+    required Polygon.Points.Point y = 2;
+}

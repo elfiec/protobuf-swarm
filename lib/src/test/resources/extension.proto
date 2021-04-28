@@ -1,0 +1,10 @@
+package main;
+
+message Shape {
+}
+
+message Square {
+    extend Shape {
+        optional Square ext = 1;
+    }
+}

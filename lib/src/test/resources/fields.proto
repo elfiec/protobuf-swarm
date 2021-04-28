@@ -1,0 +1,11 @@
+package main;
+
+message Shape {
+    required int32 x = 1;
+    optional int32 y = 2;
+    repeated int32 sides = 3;
+    oneof perimeter {
+        int32 inches = 4;
+        int32 millimeters = 5;
+    }
+}

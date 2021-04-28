@@ -1,0 +1,8 @@
+message Point {
+    required int32 x = 1;
+    required int32 y = 2;
+}
+
+message Polygon {
+    repeated Point points = 1;
+}
