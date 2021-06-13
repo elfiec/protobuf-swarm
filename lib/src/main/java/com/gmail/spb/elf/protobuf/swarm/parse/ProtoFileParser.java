@@ -104,7 +104,7 @@ class ProtoFileParser {
                     fields.add(field);
                     break;
                 case "message":
-                    ParseMessageResult result = parseMessage(tokenizer, path + "." + messageName);
+                    ParseMessageResult result = parseMessage(tokenizer, (path.isEmpty() ? "" : path + ".") + messageName);
                     types.addAll(result.getTypes());
                     extensions.addAll(result.getExtenstions());
                     break;

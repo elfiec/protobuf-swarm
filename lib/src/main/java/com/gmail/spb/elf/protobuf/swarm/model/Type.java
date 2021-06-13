@@ -25,7 +25,7 @@ public abstract class Type {
     }
 
     public String getFullName() {
-        return pack + "." + name;
+        return (pack.isEmpty() ? "" : pack + ".") + name;
     }
 
     public void resolveReferences(TypeResolver resolver) {
