@@ -1,0 +1,16 @@
+//mmm-Polygon
+message Polygon {
+    //mmm-points
+    repeated Points.Point points = 1;
+
+    //mmm-Points
+    message Points {
+        //mmm-Point
+        message Point {
+            //mmm-x
+            required int32 x = 1;
+            //mmm-y
+            required int32 y = 2;
+        }
+    }
+}

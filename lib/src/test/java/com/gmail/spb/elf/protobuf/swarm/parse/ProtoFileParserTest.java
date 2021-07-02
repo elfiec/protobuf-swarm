@@ -47,4 +47,12 @@ public class ProtoFileParserTest {
 
         protoFile.getMessage("main.Square");
     }
+
+    @Test
+    public void commentsTest() throws IOException {
+        String proto = resourceToString("comments.proto", StandardCharsets.UTF_8, getClass().getClassLoader());
+        ProtoFile protoFile = ProtoFileParser.parse(proto);
+
+        protoFile.getMessage("Polygon").getComment();
+    }
 }

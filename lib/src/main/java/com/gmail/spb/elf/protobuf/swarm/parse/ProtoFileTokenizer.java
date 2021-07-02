@@ -26,6 +26,8 @@ class ProtoFileTokenizer {
     private boolean usePreviousToken;
     private String previousToken;
 
+    private StringBuilder comments = new StringBuilder();
+
     public ProtoFileTokenizer(String text) {
         this.reader = new StringReader(text);
     }
@@ -80,13 +82,25 @@ class ProtoFileTokenizer {
         for (;;) {
             String nextToken = nextToken();
             if ("//".equals(nextToken)) {
-                toNewLine();
+                if (comments.length() > 0) {
+                    comments.append('\n');
+                }
+                comments.append(toNewLine());
             } else if ("/*".equals(nextToken)) {
-                readUntilCommentBlockEnd();
+                if (comments.length() > 0) {
+                    comments.append('\n');
+                }
+                comments.append(readUntilCommentBlockEnd());
             } else {
                 return nextToken;
             }
         }
+    }
+
+    public String consumeComments() {
+        String comments = this.comments.toString();
+        this.comments = new StringBuilder();
+        return comments;
     }
 
     public String readUntilCommentBlockEnd() {

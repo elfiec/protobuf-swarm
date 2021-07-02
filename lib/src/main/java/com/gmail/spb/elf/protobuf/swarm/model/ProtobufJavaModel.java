@@ -27,6 +27,12 @@ public class ProtobufJavaModel {
         return (Message) types.get(new TypeKey(javaClass, name));
     }
 
+    public Stream<Message> getAllMessages() {
+        return types.values().stream()
+                .filter(type -> type instanceof Message)
+                .map(type -> (Message) type);
+    }
+
     private static final class TypeKey {
         private final String javaClass;
         private final String name;

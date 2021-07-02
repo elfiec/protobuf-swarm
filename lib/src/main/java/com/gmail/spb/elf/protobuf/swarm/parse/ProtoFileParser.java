@@ -79,6 +79,8 @@ class ProtoFileParser {
 
     private static ParseMessageResult parseMessage(ProtoFileTokenizer tokenizer, String path) {
 
+        String comment = tokenizer.consumeComments();
+
         String messageName = tokenizer.nextTokenClean();
         Preconditions.checkState(isSymbol(messageName));
 
@@ -95,7 +97,7 @@ class ProtoFileParser {
                     break;
                 case "}":
                     Preconditions.checkState(open);
-                    types.add(new Message(path, messageName, fields));
+                    types.add(new Message(path, messageName, fields, comment));
                     return new ParseMessageResult(types, extensions);
                 case "optional":
                 case "required":
@@ -146,15 +148,16 @@ class ProtoFileParser {
     }
 
     private static Field parseFieldWithType(ProtoFileTokenizer tokener, FieldRule rule, boolean extension) {
+        String comment = tokener.consumeComments();
         String type = tokener.nextTokenClean();
-        return parseField(tokener, rule, type, extension);
+        return parseField(tokener, rule, type, extension, comment);
     }
 
     private static boolean isSymbol(String token) {
         return token.chars().allMatch(c -> ('0' <= c && c <= '9') || ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == '.' || c == '_');
     }
 
-    private static Field parseField(ProtoFileTokenizer tokenizer, FieldRule rule, String type, boolean extension) {
+    private static Field parseField(ProtoFileTokenizer tokenizer, FieldRule rule, String type, boolean extension, String comment) {
         String filedName = tokenizer.nextTokenClean();
         Preconditions.checkState(isSymbol(filedName));
         Preconditions.checkState(tokenizer.nextTokenClean().equals("="));
@@ -166,15 +169,6 @@ class ProtoFileParser {
             token = tokenizer.nextTokenClean();
         }
         Preconditions.checkState(token.equals(";"));
-
-        String comment;
-        if ("//".equals(tokenizer.nextToken())) {
-            comment = tokenizer.toNewLine();
-        } else {
-            tokenizer.backToken();
-            comment = null;
-        }
-
         return new Field(rule, parseType(type), filedName, index, extension, comment);
     }
 
@@ -195,7 +189,8 @@ class ProtoFileParser {
                     return fields.stream();
                 default:
                     String type = token;
-                    Field field = parseField(tokener, FieldRule.OPTIONAL, type, false);
+                    String comment = tokener.consumeComments();
+                    Field field = parseField(tokener, FieldRule.OPTIONAL, type, false, comment);
                     fields.add(field);
             }
         }

@@ -19,10 +19,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class Message extends Type {
 
     private Map<String, Field> fields;
+    private String comment;
 
-    public Message(String path, String name, List<Field> fields) {
+    public Message(String path, String name, List<Field> fields, String comment) {
         super(path, name);
         this.fields = fields.stream().collect(Collectors.toMap(Field::getName, Function.identity()));
+        this.comment = comment;
     }
 
     public Field getFieldStrict(String name) {
@@ -62,6 +64,10 @@ public final class Message extends Type {
     public Stream<Field> getSortedByIndexFields() {
         return fields.values().stream()
                 .sorted(Comparator.comparingInt(Field::getIndex));
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override
